@@ -1234,6 +1234,13 @@ class Atoms:
             identically), to center about the origin.
         """
 
+        # First move the CenterOfMass to the center of the cell
+        pos = self.get_positions()
+        COM = np.mean(pos, axis=0)
+        cell_center = np.diag(self.get_cell()) / 2.0
+        self.set_positions(pos - np.tile(COM.reshape(1,3),(len(self),1)) + np.tile(cell_center.reshape(1,3),(len(self),1)))
+        self.wrap()
+
         # Find the orientations of the faces of the unit cell
         cell = self.cell.complete()
         dirs = np.zeros_like(cell)
